@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment-banking-app
+  labels:
+    app: banking-app
+
+spec:
+  replicas: 1
+  selector:
+  # this thing connects pod to deployment matchlabels should be same in pod labels and depolyment labels
+    matchLabels:
+      app: banking-app
+  template:
+    metadata:
+      labels:
+        app: banking-app
+    spec:
+    # this label is optional
+      containers:
+      - name: banking-app-container
+        image: adithyaudupa123/banking-app:latest
+        # if new image uploads to docker repo it automatically pulls from it
+        imagePullPolicy: Always
+
+        ports:
+        - containerPort: 9040
+        # this env file overwrites the end field in the image
+        env:
+          - name: MONGODB_DATABASE
+            value: "your database URL"
+---
